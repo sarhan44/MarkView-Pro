@@ -1,5 +1,5 @@
 import React from 'react';
-import { Download, FileText, Wand2, columns, LayoutPanelLeft, LayoutPanelTop, FileDown } from 'lucide-react';
+import { Download, FileText, Wand2, Columns, LayoutPanelLeft, LayoutPanelTop, FileDown } from 'lucide-react';
 import { ViewMode, ToolbarProps } from '../types';
 
 export const Toolbar: React.FC<ToolbarProps> = ({ 
@@ -34,9 +34,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             className={`p-1.5 rounded-md transition-colors ${viewMode === ViewMode.SPLIT ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
             title="Split View"
           >
-            <columns size={18} /> {/* Note: lucide-react exports 'Columns' usually, checking generic icon usage */}
+            <Columns size={18} />
             <span className="sr-only">Split</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="12" x2="12" y1="3" y2="21"/></svg>
           </button>
           <button
             onClick={() => setViewMode(ViewMode.PREVIEW)}
