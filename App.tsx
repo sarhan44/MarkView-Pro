@@ -63,24 +63,40 @@ function App() {
       return;
     }
 
-    // Create a container that includes the preview content + watermark
-    const container = document.createElement('div');
-    container.style.width = previewRef.current.offsetWidth + 'px';
-    container.innerHTML = previewRef.current.innerHTML + 
-      '<div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e5e7eb; text-align: center; font-size: 0.85rem; color: #999;">' +
-      'Made with <a href="https://markdown.sarhankhan.in" style="color: #4f46e5; text-decoration: none;">MarkViewPro</a> | https://markdown.sarhankhan.in' +
-      '</div>';
-    container.style.padding = '10mm';
+    // Create a temporary container with watermark
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.width = previewRef.current.offsetWidth + 'px';
+    
+    // Clone the preview content
+    const clonedContent = previewRef.current.cloneNode(true) as HTMLElement;
+    
+    // Create watermark element
+    const watermarkDiv = document.createElement('div');
+    watermarkDiv.style.marginTop = '2rem';
+    watermarkDiv.style.paddingTop = '1rem';
+    watermarkDiv.style.borderTop = '1px solid #e5e7eb';
+    watermarkDiv.style.textAlign = 'center';
+    watermarkDiv.style.fontSize = '0.85rem';
+    watermarkDiv.style.color = '#999';
+    watermarkDiv.innerHTML = 'Made with <a href="https://markdown.sarhakhan.in" style="color: #4f46e5; text-decoration: none;">MarkViewPro</a> | https://markdown.sarhakhan.in';
+    
+    clonedContent.appendChild(watermarkDiv);
+    tempContainer.appendChild(clonedContent);
+    document.body.appendChild(tempContainer);
 
     const opt = {
-      margin:       [10, 10, 20, 10],
+      margin:       [10, 10, 10, 10],
       filename:     'document.pdf',
       image:        { type: 'jpeg', quality: 0.98 },
       html2canvas:  { scale: 2, useCORS: true },
       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    html2pdf().set(opt).from(container).save();
+    html2pdf().set(opt).from(clonedContent).save().then(() => {
+      document.body.removeChild(tempContainer);
+    });
   }, [viewMode]);
 
   // AI Enhancement Feature
