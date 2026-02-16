@@ -18,7 +18,7 @@ export const Preview: React.FC<PreviewProps> = ({ content, previewRef, visible }
   if (!visible) return null;
 
   return (
-    <div className="h-full flex flex-col bg-white border-l border-gray-200 overflow-hidden">
+    <div className="h-full flex flex-col bg-white border-t md:border-t-0 md:border-l border-gray-200 overflow-hidden">
       <div className="px-4 py-2 bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-500 uppercase tracking-wider flex justify-between items-center">
         <span>Live Preview</span>
       </div>

@@ -20,8 +20,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       </div>
 
       <div className="flex items-center space-x-2 sm:space-x-4">
-        {/* View Toggles (Visible on Desktop) */}
-        <div className="hidden md:flex items-center bg-gray-100 rounded-lg p-1 mr-2">
+        {/* View Toggles */}
+        <div className="flex items-center bg-gray-100 rounded-lg p-1 mr-2">
           <button
             onClick={() => setViewMode(ViewMode.EDITOR)}
             className={`p-1.5 rounded-md transition-colors ${viewMode === ViewMode.EDITOR ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}
@@ -57,7 +57,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           ) : (
             <Wand2 size={16} />
           )}
-          <span className="text-sm font-medium">AI Polish</span>
+          <span className="hidden sm:inline text-sm font-medium">AI Polish</span>
         </button>
 
         <div className="h-6 w-px bg-gray-300 mx-2"></div>

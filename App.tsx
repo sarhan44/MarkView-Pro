@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Toolbar } from './components/Toolbar';
 import { Editor } from './components/Editor';
 import { Preview } from './components/Preview';
@@ -9,11 +9,32 @@ import { ViewMode } from './types';
 // Declare html2pdf for TypeScript since it's loaded via CDN
 declare const html2pdf: any;
 
+const STORAGE_KEY = 'markview-content';
+
 function App() {
-  const [content, setContent] = useState<string>(DEFAULT_MARKDOWN);
+  // Initialize state from local storage if available, otherwise use default
+  const [content, setContent] = useState<string>(() => {
+    try {
+      const savedContent = localStorage.getItem(STORAGE_KEY);
+      return savedContent !== null ? savedContent : DEFAULT_MARKDOWN;
+    } catch (error) {
+      console.warn('Failed to load content from local storage:', error);
+      return DEFAULT_MARKDOWN;
+    }
+  });
+
   const [isAiLoading, setIsAiLoading] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.SPLIT);
   const previewRef = useRef<HTMLDivElement>(null);
+
+  // Save content to local storage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, content);
+    } catch (error) {
+      console.error('Failed to save content to local storage:', error);
+    }
+  }, [content]);
 
   // Handle downloading the raw Markdown file
   const handleDownloadMd = useCallback(() => {
@@ -83,12 +104,12 @@ function App() {
         setViewMode={setViewMode}
       />
 
-      <main className="flex-1 flex overflow-hidden">
+      <main className="flex-1 flex flex-col md:flex-row overflow-hidden">
         {/* Editor Panel */}
         <div className={`${
-            viewMode === ViewMode.SPLIT ? 'w-1/2' : 
-            viewMode === ViewMode.EDITOR ? 'w-full' : 'hidden'
-          } h-full transition-all duration-300 ease-in-out`}
+            viewMode === ViewMode.SPLIT ? 'h-1/2 w-full md:h-full md:w-1/2' : 
+            viewMode === ViewMode.EDITOR ? 'h-full w-full' : 'hidden'
+          } transition-all duration-300 ease-in-out`}
         >
           <Editor 
             content={content} 
@@ -99,9 +120,9 @@ function App() {
 
         {/* Preview Panel */}
         <div className={`${
-            viewMode === ViewMode.SPLIT ? 'w-1/2' : 
-            viewMode === ViewMode.PREVIEW ? 'w-full' : 'hidden'
-          } h-full transition-all duration-300 ease-in-out`}
+            viewMode === ViewMode.SPLIT ? 'h-1/2 w-full md:h-full md:w-1/2' : 
+            viewMode === ViewMode.PREVIEW ? 'h-full w-full' : 'hidden'
+          } transition-all duration-300 ease-in-out`}
         >
           <Preview 
             content={content} 
