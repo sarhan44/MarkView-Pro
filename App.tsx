@@ -38,7 +38,9 @@ function App() {
 
   // Handle downloading the raw Markdown file
   const handleDownloadMd = useCallback(() => {
-    const blob = new Blob([content], { type: 'text/markdown' });
+    const watermark = '\n\n---\n\n_Made with [MarkViewPro](https://markdown.sarhankhan.in)_';
+    const contentWithWatermark = content + watermark;
+    const blob = new Blob([contentWithWatermark], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -53,15 +55,6 @@ function App() {
   const handleDownloadPdf = useCallback(() => {
     if (!previewRef.current) return;
 
-    const element = previewRef.current;
-    const opt = {
-      margin:       [10, 10],
-      filename:     'document.pdf',
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2, useCORS: true },
-      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
     // If currently in Editor only mode, we need to temporarily render the preview
     // However, for simplicity in this MVP, we assume the ref is available if the component is mounted.
     // Ideally, we force mount or use an offscreen render, but checking viewMode is safer.
@@ -70,7 +63,24 @@ function App() {
       return;
     }
 
-    html2pdf().set(opt).from(element).save();
+    // Create a container that includes the preview content + watermark
+    const container = document.createElement('div');
+    container.style.width = previewRef.current.offsetWidth + 'px';
+    container.innerHTML = previewRef.current.innerHTML + 
+      '<div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e5e7eb; text-align: center; font-size: 0.85rem; color: #999;">' +
+      'Made with <a href="https://markdown.sarhankhan.in" style="color: #4f46e5; text-decoration: none;">MarkViewPro</a> | https://markdown.sarhankhan.in' +
+      '</div>';
+    container.style.padding = '10mm';
+
+    const opt = {
+      margin:       [10, 10, 20, 10],
+      filename:     'document.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(container).save();
   }, [viewMode]);
 
   // AI Enhancement Feature
