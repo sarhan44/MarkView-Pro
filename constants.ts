@@ -24,5 +24,13 @@ function greet(name) {
 | PDF Export | ✅ Ready |
 | AI Integration | ✅ Ready |
 
+## Mermaid diagram
+
+\`\`\`mermaid
+flowchart LR
+  A[Markdown] --> B(Mermaid)
+  B --> C[SVG preview]
+\`\`\`
+
 > "Simplicity is the ultimate sophistication." – Leonardo da Vinci
 `;

@@ -10,11 +10,13 @@ export enum ViewMode {
 }
 
 export interface ToolbarProps {
-  content: string;
+  exportFileBaseName: string;
+  onExportFileBaseNameChange: (name: string) => void;
   onDownloadMd: () => void;
   onDownloadPdf: () => void;
   onAiEnhance: () => void;
   isAiLoading: boolean;
+  isPdfExporting: boolean;
   viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
 }
